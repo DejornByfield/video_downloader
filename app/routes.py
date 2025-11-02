@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template, redirect, url_for
 from .downloader import download_video
 from .models import Download 
 from .database import db 
@@ -7,7 +7,8 @@ main = Blueprint('main', __name__)
 
 @main.route('/')
 def home():
-    return jsonify({"message: Video Downloader API is running!"})
+    downloads = Download.query.order_by(Download.created_at.desc()).all()
+    return render_template('index.html', downloads=downloads)
 
 @main.route('/download', methods=['POST'])
 def download():
